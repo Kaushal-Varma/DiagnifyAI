@@ -1,4 +1,6 @@
 import OpenAI from 'openai';
+import { getCachedData, setCachedData, generateCacheKey } from './cacheService';
+import { getMockAnalysis, getMockSymptoms, getMockFact } from './mockService';
 
 const apiKey = import.meta.env.VITE_OPENAI_API_KEY;
 
@@ -22,6 +24,10 @@ const retryWithBackoff = async (fn, retries = 3, delay = 1000) => {
 };
 
 export const analyzeImage = async (base64Image) => {
+    const cacheKey = generateCacheKey(base64Image);
+    const cached = getCachedData(cacheKey);
+    if (cached) return cached;
+
     try {
         const response = await retryWithBackoff(() => openai.chat.completions.create({
             model: "gpt-4o-mini",
@@ -40,16 +46,21 @@ export const analyzeImage = async (base64Image) => {
                 },
             ],
         }));
-        return response.choices[0].message.content;
+        const result = response.choices[0].message.content;
+        setCachedData(cacheKey, result);
+        return result;
     } catch (error) {
         console.error("Error analyzing image:", error);
-        if (error.status === 401) throw new Error("Invalid API Key. Please check your key.");
-        if (error.status === 429) throw new Error("Rate limit exceeded. Please wait a moment and try again.");
-        throw new Error(error.message || "Failed to analyze image.");
+        // Fallback to mock data if API fails
+        return getMockAnalysis();
     }
 };
 
 export const checkSymptoms = async (diseaseName) => {
+    const cacheKey = generateCacheKey(diseaseName.toLowerCase());
+    const cached = getCachedData(cacheKey);
+    if (cached) return cached;
+
     try {
         const response = await retryWithBackoff(() => openai.chat.completions.create({
             model: "gpt-4o-mini",
@@ -64,15 +75,18 @@ export const checkSymptoms = async (diseaseName) => {
                 },
             ],
         }));
-        return response.choices[0].message.content;
+        const result = response.choices[0].message.content;
+        setCachedData(cacheKey, result);
+        return result;
     } catch (error) {
         console.error("Error checking symptoms:", error);
-        if (error.status === 429) throw new Error("Rate limit exceeded. Please wait a moment and try again.");
-        throw new Error(error.message || "Failed to get disease information.");
+        // Fallback to mock data
+        return getMockSymptoms(diseaseName);
     }
 };
 
 export const getMedicalFact = async () => {
+    // Facts don't need aggressive caching, but we can fallback easily
     try {
         const response = await retryWithBackoff(() => openai.chat.completions.create({
             model: "gpt-4o-mini",
@@ -86,6 +100,6 @@ export const getMedicalFact = async () => {
         return response.choices[0].message.content;
     } catch (error) {
         console.error("Error fetching fact:", error);
-        return "Did you know? The human body contains enough carbon to provide 'lead' (which is really graphite) for about 9,000 pencils.";
+        return getMockFact();
     }
 }

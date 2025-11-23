@@ -7,7 +7,7 @@ import EmergencyLocator from './components/EmergencyLocator';
 import MaintenancePage from './components/MaintenancePage';
 
 // TOGGLE THIS TO TRUE TO ENABLE MAINTENANCE MODE
-const MAINTENANCE_MODE = true;
+const MAINTENANCE_MODE = false;
 
 function App() {
   const [activeTab, setActiveTab] = useState('analyze');
