@@ -4,9 +4,17 @@ import ImageAnalyzer from './components/ImageAnalyzer';
 import DiseaseChecker from './components/DiseaseChecker';
 import FactsCarousel from './components/FactsCarousel';
 import EmergencyLocator from './components/EmergencyLocator';
+import MaintenancePage from './components/MaintenancePage';
+
+// TOGGLE THIS TO TRUE TO ENABLE MAINTENANCE MODE
+const MAINTENANCE_MODE = true;
 
 function App() {
   const [activeTab, setActiveTab] = useState('analyze');
+
+  if (MAINTENANCE_MODE) {
+    return <MaintenancePage />;
+  }
 
   const renderContent = () => {
     switch (activeTab) {
