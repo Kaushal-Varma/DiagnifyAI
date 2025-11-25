@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Search, Loader2, AlertCircle } from 'lucide-react';
-import { checkSymptoms } from '../services/openaiService';
+import { checkSymptoms } from '../services/aiService';
+import ResultRenderer from './ResultRenderer';
 
 const DiseaseChecker = () => {
     const [query, setQuery] = useState('');
@@ -47,9 +48,7 @@ const DiseaseChecker = () => {
                         <AlertCircle size={20} />
                         <span style={{ fontSize: '0.9rem', fontWeight: '600' }}>Medical Disclaimer: Consult a doctor for professional advice.</span>
                     </div>
-                    <div style={{ whiteSpace: 'pre-wrap', lineHeight: '1.6' }}>
-                        {result}
-                    </div>
+                    <ResultRenderer text={result} />
                 </div>
             )}
 

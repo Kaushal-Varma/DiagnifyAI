@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Lightbulb, RefreshCw } from 'lucide-react';
-import { getMedicalFact } from '../services/openaiService';
+import { getMedicalFact } from '../services/aiService';
 
 const FactsCarousel = () => {
     const [fact, setFact] = useState("Loading amazing fact...");

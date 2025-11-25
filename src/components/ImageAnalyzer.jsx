@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Upload, Loader2 } from 'lucide-react';
-import { analyzeImage } from '../services/openaiService';
+import { analyzeImage } from '../services/aiService';
+import ResultRenderer from './ResultRenderer';
 
 const ImageAnalyzer = () => {
     const [selectedImage, setSelectedImage] = useState(null);
@@ -77,10 +78,8 @@ const ImageAnalyzer = () => {
 
             {analysis && (
                 <div className="glass-panel animate-fade-in" style={{ marginTop: '20px', padding: '20px' }}>
-                    <h3>Analysis Result</h3>
-                    <div style={{ whiteSpace: 'pre-wrap', lineHeight: '1.6' }}>
-                        {analysis}
-                    </div>
+                    <h3 style={{ marginBottom: '15px', textAlign: 'center' }}>Analysis Result</h3>
+                    <ResultRenderer text={analysis} />
                 </div>
             )}
 

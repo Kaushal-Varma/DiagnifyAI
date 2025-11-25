@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { checkSymptoms, getMedicalFact } from './services/aiService';
 import Navbar from './components/Navbar';
 import ImageAnalyzer from './components/ImageAnalyzer';
 import DiseaseChecker from './components/DiseaseChecker';
